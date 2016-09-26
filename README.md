@@ -20,7 +20,8 @@ Tests are only made with a f@st 5330b routeur model. Because it's the only hardw
 ### TODO
 
  - Add test coverage
- - Add auth method to be able to use this api remotely
- - Add the library to Pypi
+ - [x] Add auth method to login and logout
+ - Be able to use this api remotely
+ - [x] Add the library to Pypi
  - Add more get functions
  - .... and lots of things !
