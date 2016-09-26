@@ -6,7 +6,8 @@ class BboxAuth:
     Used to handle the different kind of Auth for each API access
     """
 
-    def __init__(self, local_auth_required, remote_auth_required, authentified, type_of_authentification):
+    def __init__(self, local_auth_required, remote_auth_required,
+                 authentified, type_of_authentification, auth_cookie=None):
         """
 
         :param local_auth_required: The auth needed for a local connection
@@ -18,6 +19,7 @@ class BboxAuth:
         self.remote_auth = remote_auth_required
         self.authentified = authentified
         self.type_of_auth = type_of_authentification
+        self.auth_cookie = auth_cookie
 
     def is_authentified(self):
         return self.authentified
@@ -30,6 +32,20 @@ class BboxAuth:
 
     def get_type_of_authentification(self):
         return self.type_of_auth
+
+    def set_access(self, local_access, remote_access):
+        self.local_auth = local_access
+        self.remote_auth = remote_access
+
+    def set_cookie_id(self, cookie):
+        self.auth_cookie = cookie
+        if cookie is None:
+            self.authentified= False
+        else:
+            self.authentified = True
+
+    def get_cookie_id(self):
+        return self.auth_cookie
 
     def check_auth(self):
         """

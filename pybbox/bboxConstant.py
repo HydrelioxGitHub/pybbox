@@ -13,6 +13,7 @@ class BboxConstant:
     AUTHENTICATION_LEVEL_PUBLIC = 2
     AUTHENTICATION_LEVEL_PRIVATE = 1
     AUTHENTICATION_LEVEL_NONE = 0
+    COOKIE_BBOX_ID = "BBOX_ID"
 
     def __init__(self):
         pass
