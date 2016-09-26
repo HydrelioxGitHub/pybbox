@@ -20,7 +20,9 @@ class BboxAPIUrl:
         self.api_class = api_class
         self.api_method = api_method
         self.ip = ip
-        self.url = self.build_url_request()
+        self.authentication_type = None
+        self.url = None
+        self.build_url_request()
 
     def get_api_class(self):
         return self.api_class
@@ -34,6 +36,14 @@ class BboxAPIUrl:
     def get_url(self):
         return self.url
 
+    def get_authentication_type(self):
+        return self.authentication_type
+
+    def set_api_name(self, api_class, api_method):
+        self.api_class = api_class
+        self.api_method = api_method
+        self.build_url_request()
+
     def build_url_request(self):
         """
         Build the url to use for making a call to the Bbox API
@@ -42,9 +52,11 @@ class BboxAPIUrl:
         # Check if the ip is LAN or WAN
         if net.IPAddress(self.ip).is_private():
             url = "http://{}".format(self.ip)
+            self.authentication_type = BboxConstant.AUTHENTICATION_TYPE_LOCAL
         else:
             url = "https://{}:{}".format(self.ip,
                                          BboxConstant.DEFAULT_REMOTE_PORT)
+            self.authentication_type = BboxConstant.AUTHENTICATION_TYPE_REMOTE
 
         if self.api_class is None:
             url = "{}/{}".format(url, self.API_PREFIX)
@@ -52,6 +64,6 @@ class BboxAPIUrl:
             url = "{}/{}/{}".format(url, self.API_PREFIX, self.api_class)
 
         if self.api_method is None:
-            return url
+            self.url = url
         else:
-            return "{}/{}".format(url, self.api_method)
+            self.url = "{}/{}".format(url, self.api_method)
