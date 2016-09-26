@@ -1,4 +1,5 @@
 from bboxConstant import BboxConstant
+import netaddr as net
 
 
 class BboxAPIUrl:
@@ -38,12 +39,17 @@ class BboxAPIUrl:
         Build the url to use for making a call to the Bbox API
         :return: url string
         """
-        if self.api_class is None:
-            url = "http://{}/{}".format(BboxConstant.DEFAULT_LOCAL_IP,
-                                        self.API_PREFIX)
+        # Check if the ip is LAN or WAN
+        if net.IPAddress(self.ip).is_private():
+            url = "http://{}".format(self.ip)
         else:
-            url = "http://{}/{}/{}".format(BboxConstant.DEFAULT_LOCAL_IP,
-                                           self.API_PREFIX, self.api_class)
+            url = "https://{}:{}".format(self.ip,
+                                         BboxConstant.DEFAULT_REMOTE_PORT)
+
+        if self.api_class is None:
+            url = "{}/{}".format(url, self.API_PREFIX)
+        else:
+            url = "{}/{}/{}".format(url, self.API_PREFIX, self.api_class)
 
         if self.api_method is None:
             return url
