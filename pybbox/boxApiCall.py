@@ -39,9 +39,17 @@ class BoxApiCall:
         if self.parameters is None:
             resp = self.call_method(self.api_url.get_url())
         else:
-            resp = self.call_method(self.api_url.get_url(), date=self.parameters)
+            resp = self.call_method(self.api_url.get_url(),
+                                    data=self.parameters)
         if resp.status_code != 200:
             # This means something went wrong.
             raise Exception('Error {} with request {}'.format(
                 resp.status_code, self.api_url.get_url()))
-        return resp.json()[0]
+
+        # Return the status code if the response from the box has no json
+        try:
+            response = resp.json()[0]
+        except ValueError:
+            response = resp.status_code
+
+        return response
