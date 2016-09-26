@@ -36,20 +36,22 @@ class BoxApiCall:
         """
         if not self.auth.check_auth():
             raise Exception('Authentification needed or API not available with your type of connection')
-        if self.parameters is None:
-            resp = self.call_method(self.api_url.get_url())
+        if self.auth.is_authentified():
+            id_cookie = {BboxConstant.COOKIE_BBOX_ID: self.auth.get_cookie_id()}
+            if self.parameters is None:
+                resp = self.call_method(self.api_url.get_url(), cookies=id_cookie)
+            else:
+                resp = self.call_method(self.api_url.get_url(),
+                                        data=self.parameters, cookies=id_cookie)
         else:
-            resp = self.call_method(self.api_url.get_url(),
-                                    data=self.parameters)
+            if self.parameters is None:
+                resp = self.call_method(self.api_url.get_url())
+            else:
+                resp = self.call_method(self.api_url.get_url(),
+                                        data=self.parameters)
         if resp.status_code != 200:
             # This means something went wrong.
             raise Exception('Error {} with request {}'.format(
                 resp.status_code, self.api_url.get_url()))
 
-        # Return the status code if the response from the box has no json
-        try:
-            response = resp.json()[0]
-        except ValueError:
-            response = resp.status_code
-
-        return response
+        return resp
