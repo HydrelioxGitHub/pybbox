@@ -130,7 +130,7 @@ class Bbox:
     def get_xdsl_info(self):
         """
         Get all info about the xdsl connection
-        :return: a list with all devices data
+        :return: dict
         """
         self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PUBLIC, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
         self.bbox_url.set_api_name(BboxConstant.API_WAN, "xdsl")
@@ -138,6 +138,30 @@ class Bbox:
                          self.bbox_auth)
         resp = api.execute_api_request()
         return resp.json()[0]["wan"]["xdsl"]
+
+    def get_xdsl_stats(self):
+        """
+        Get stat about the xdsl connection
+        :return: dict
+        """
+        self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PUBLIC, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
+        self.bbox_url.set_api_name(BboxConstant.API_WAN, "xdsl/stats")
+        api = BoxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_GET, None,
+                         self.bbox_auth)
+        resp = api.execute_api_request()
+        return resp.json()[0]["wan"]["xdsl"]["stats"]
+
+    def get_ip_stats(self):
+        """
+        Get stat about the ip connection
+        :return: dict
+        """
+        self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PUBLIC, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
+        self.bbox_url.set_api_name(BboxConstant.API_WAN, "ip/stats")
+        api = BoxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_GET, None,
+                         self.bbox_auth)
+        resp = api.execute_api_request()
+        return resp.json()[0]["wan"]["ip"]["stats"]
 
     def is_bbox_connected(self):
         """
@@ -159,3 +183,23 @@ class Bbox:
         """
         xdsl_info = self.get_xdsl_info()
         return xdsl_info["down"]["bitrates"] / 1000
+
+    def get_up_used_bandwith(self):
+        """
+        Return a percentage of the current used xdsl upload bandwith
+        0 no bandwith is used, 100 all your bandwith is used
+        :return: int
+        """
+        ip_stats_up = self.get_ip_stats()['tx']
+        percent = ip_stats_up['bandwidth']*100/ip_stats_up['maxBandwidth']
+        return int(percent)
+
+    def get_down_used_bandwith(self):
+        """
+        Return a percentage of the current used xdsl download bandwith
+        0 no bandwith is used, 100 all your bandwith is used
+        :return: int
+        """
+        ip_stats_up = self.get_ip_stats()['rx']
+        percent = ip_stats_up['bandwidth']*100/ip_stats_up['maxBandwidth']
+        return int(percent)
