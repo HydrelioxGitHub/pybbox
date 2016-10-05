@@ -62,6 +62,34 @@ class Bbox:
         response = api.execute_api_request()
         return response
 
+    def reboot(self):
+        """
+        Reboot the device
+        Useful when trying to get xDSL sync
+        :return: bool
+        """
+        token = self.get_token()
+        self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PRIVATE, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
+        url_suffix = "reboot?btoken={}".format(token)
+        self.bbox_url.set_api_name(BboxConstant.API_DEVICE, url_suffix)
+        api = BoxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_POST, None,
+                         self.bbox_auth)
+        resp = api.execute_api_request()
+        return resp.status_code == 200
+
+    def get_token(self):
+        """
+        Return a string which is a token, needed for some API calls
+        TODO : make a token class to be able to store date of expiration
+        :return: string
+        """
+        self.bbox_auth.set_access(BboxConstant.AUTHENTICATION_LEVEL_PRIVATE, BboxConstant.AUTHENTICATION_LEVEL_PRIVATE)
+        self.bbox_url.set_api_name(BboxConstant.API_DEVICE, "token")
+        api = BoxApiCall(self.bbox_url, BboxConstant.HTTP_METHOD_GET, None,
+                         self.bbox_auth)
+        resp = api.execute_api_request()
+        return resp.json()[0]['device']['token']
+
     """
     LAN API
     """
