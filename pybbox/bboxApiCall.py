@@ -4,7 +4,7 @@ from bboxAuth import BboxAuth
 from bboxApiURL import BboxAPIUrl
 
 
-class BoxApiCall:
+class BboxApiCall:
 
     def __init__(self, bbox_api_url, http_method=BboxConstant.HTTP_METHOD_GET,
                  parameters=None, auth=None):
