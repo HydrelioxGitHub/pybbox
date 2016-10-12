@@ -1,7 +1,7 @@
 import requests
-from bboxConstant import BboxConstant
-from bboxAuth import BboxAuth
-from bboxApiURL import BboxAPIUrl
+from .bboxConstant import BboxConstant
+from .bboxAuth import BboxAuth
+from .bboxApiURL import BboxAPIUrl
 
 
 class BboxApiCall:
