@@ -1,4 +1,4 @@
-from bboxConstant import BboxConstant
+from .bboxConstant import BboxConstant
 import netaddr as net
 
 
