@@ -1,6 +1,6 @@
 from .bboxConstant import BboxConstant
 import netaddr as net
-
+import socket
 
 class BboxAPIUrl:
     """
@@ -50,8 +50,8 @@ class BboxAPIUrl:
         :return: url string
         """
         # Check if the ip is LAN or WAN
-        if net.IPAddress(self.ip).is_private():
-            url = "http://{}".format(self.ip)
+        if net.IPAddress(socket.gethostbyname(self.ip)).is_private():
+            url = "https://{}".format(self.ip)
             self.authentication_type = BboxConstant.AUTHENTICATION_TYPE_LOCAL
         else:
             url = "https://{}:{}".format(self.ip,
